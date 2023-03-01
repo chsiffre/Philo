@@ -1,10 +1,12 @@
-NAME = philosopher
+NAME = philo
 
-CFLAGS = -Wall -Wextra -Werror -g3 -pthread
+CFLAGS = -Wall -Wextra -g3 -pthread
 
 PHILO =	${DIR_PHILO}ft_atoi.c \
 			${DIR_PHILO}main.c \
 			${DIR_PHILO}init_create.c \
+			${DIR_PHILO}fork.c
+
 	
 LIST_OBJS = ${PHILO:.c=.o}
 
