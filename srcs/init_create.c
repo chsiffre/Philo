@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_create.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 14:10:22 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/01 18:22:17 by charles          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:08:38 by chsiffre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,15 @@ pthread_t    *ft_create_philo(t_data *data)
     if (!philo)
         return (NULL);
     phil = malloc(sizeof(t_philo) * data->n_philo);
+    if (!philo)
+        return (NULL);
     data->fork = ft_create_fork(data->n_philo);
     i = -1;
     while (++i < data->n_philo)
     {
         phil[i] = ft_philo_var_init(i + 1, data);
+        //dprintf(2, "ok");
+        //printf("Le philo %d aura la fourchette gauche %d et la fourchette droite %d\n", phil[i].i_phil, phil[i].l_fork, phil[i].r_fork);
         pthread_create(&philo[i], NULL, (void *) ft_routine, &phil[i]);
     }
     return (philo);
@@ -42,13 +46,23 @@ t_philo ft_philo_var_init(int i, t_data *data)
     phil->i_phil = i;
     phil->eat_count = 0;
     phil->last_eat = data->start_time;
+    if (i == 1)
+    {
+        phil->r_fork = data->n_philo;
+        phil->l_fork = i;
+    }
+    else
+    {
+        phil->r_fork = i - 1;
+        phil->l_fork = i;
+    }   
     return (*phil);
-    
 }
 
 void    ft_struct_init(t_data *data, int ac, char **av)
 {
     struct timeval  time;
+    
     data->n_philo = ft_atoi(av[1]);
     data->time_die = ft_atoi(av[2]);
     data->time_eat = ft_atoi(av[3]);
@@ -67,19 +81,4 @@ long long int   ft_time(void)
     
     gettimeofday(&current_time, NULL);
     return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
-}
-
-void *ft_routine(t_philo *phil)
-{
-    // long long time;
-
-    // printf("%d ", phil->i);
-    // time = ft_time();
-    // pthread_mutex_lock(phil->data->l_fork);
-    // printf("%lld %d has taken a fork\n", time - ft_time(), phil->i);
-    // pthread_mutex_unlock(phil->data->l_fork);
-    pthread_mutex_lock(phil->r_fork);
-    // printf("%lld %d has taken a fork\n", time - ft_time(), phil->i);
-    // pthread_mutex_unlock(phil->r_fork);
-    return ((void * ) 0);
 }

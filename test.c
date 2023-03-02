@@ -6,7 +6,7 @@
 /*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/28 13:43:37 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/02/28 13:46:22 by chsiffre         ###   ########.fr       */
+/*   Updated: 2023/03/02 13:23:26 by chsiffre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int main()
 {
-    int time;
-
-    time = gettimeofday();
-    printf("%d"m time);
+    int bit;
+    unsigned char c;
+    
+    c = 'c';
+    bit = 0;
+    while ()
 }
