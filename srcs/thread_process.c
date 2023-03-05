@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 10:35:11 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/02 14:31:44 by chsiffre         ###   ########.fr       */
+/*   Updated: 2023/03/05 19:21:52 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,24 @@
 
 void *ft_routine(t_philo *phil)
 {
-    long long time;
+    //long long time;
     int        ind;
 
     ind  = 1;
-    //printf("%d", phil->data->option_eat);
     printf("%d", phil->data->option_eat);
-    while (++ind != phil->data->option_eat )//|| !ft_isdead())
+    //return ((void*)0);
+    while (phil->eat_count != phil->data->option_eat )
     {
-        //if (phil->data->option_eat % 2 == 1)
-        dprintf(2, "ok");
-        safe_print(&phil[ind], ind, FORK);    
+        phil->eat_count = 0;
+        if (philo_eat(phil) == 0)
+        {
+            if (philo_sleep(phil) == 0)
+                return (phil);
+        }
+        if (philo_is_dead(phil) == 0)
+            return (phil)
     }
-    return ((void * ) 0);
+    return (phil);
 }
 
 long    actual_time(long start_time)
@@ -36,7 +41,6 @@ long    actual_time(long start_time)
 
 void    safe_print(t_philo *phil, int i, char *str)
 {
-    dprintf(2, " safe_print");
     pthread_mutex_lock(&phil[i].data->fork[phil[i].l_fork]);
     printf("%ld %d %s", actual_time(phil[i].data->start_time),  phil[i].i_phil, str);
     pthread_mutex_lock(&phil[i].data->fork[phil[i].r_fork]);
