@@ -6,7 +6,8 @@ PHILO =	${DIR_PHILO}ft_atoi.c \
 			${DIR_PHILO}main.c \
 			${DIR_PHILO}init_create.c \
 			${DIR_PHILO}fork.c \
-			${DIR_PHILO}thread_process.c
+			${DIR_PHILO}thread_process.c \
+			${DIR_PHILO}philo_utils.c
 
 	
 LIST_OBJS = ${PHILO:.c=.o}
@@ -20,7 +21,7 @@ all : $(NAME)
 %.o: %.c $(CC) $(CFLAGS) -I philo.h -I $(DIR_PHILO) -c $< -o ${<:.c=.o} 
 
 $(NAME) : $(LIST_OBJS)
-	$(CC) $(LIST_OBJS) -g3 -pthread -lpthread -o $(NAME)
+	$(CC) $(LIST_OBJS) -g3 -pthread -o $(NAME)
 clean:
 	rm -rf $(LIST_OBJS)
 
