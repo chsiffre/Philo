@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_create.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 14:10:22 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/06 16:46:17 by chsiffre         ###   ########.fr       */
+/*   Updated: 2023/03/07 11:17:16 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ pthread_t    *ft_create_philo(t_data *data)
     while (++i < data->n_philo)
     {
         phil[i] = ft_philo_var_init(i + 1, data);
-        printf("%d\n", i);
         pthread_create(&philo[i], NULL, ft_routine, (void *) &phil[i]);
-            // printf("casse\n");
-        // printf("%lu", philo[i]);
     }
     return (philo);
 }
@@ -44,22 +41,19 @@ t_philo ft_philo_var_init(int i, t_data *data)
 {
     t_philo phil;
     
-    // phil = malloc(sizeof(t_philo));
-    // if (!phil)
-    //     return (*phil);
     phil.data = data;
     phil.i_phil = i;
     phil.eat_count = 0;
     phil.last_eat = data->start_time;
     if (i == 1)
     {
-        phil.r_fork = data->n_philo;
-        phil.l_fork = i;
+        phil.r_fork = data->n_philo - 1;
+        phil.l_fork = i - 1;
     }
     else
     {
-        phil.r_fork = i - 1;
-        phil.l_fork = i;
+        phil.r_fork = i - 2;
+        phil.l_fork = i - 1;
     }   
     return (phil);
 }
@@ -74,12 +68,13 @@ t_data  *ft_struct_init(int ac, char **av)
     data->time_die = ft_atoi(av[2]);
     data->time_eat = ft_atoi(av[3]);
     data->time_sleep = ft_atoi(av[4]);
+    data->philo_dead = 0;
     if (ac == 6)
         data->option_eat = ft_atoi(av[5]);
     else
         data->option_eat = -1;
     
     gettimeofday(&time, NULL);
-    data->start_time = (time.tv_sec * 1000 + time.tv_usec / 1000);
+    data->start_time = (time.tv_usec / 1000 + time.tv_sec * 1000);
     return (data);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:59:28 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/06 16:25:04 by chsiffre         ###   ########.fr       */
+/*   Updated: 2023/03/07 11:51:41 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,17 @@
 # define EAT "is eating"
 # define SLEEP "is sleeping"
 # define THINK "is thinking"
+# define DEAD "is dead"
 
 typedef struct s_data
 {
 	int				n_philo;
-	int				start_time;
+	long			start_time;
 	int				time_eat;
 	int				time_sleep;
 	int				time_die;
 	int				option_eat;
+	int				philo_dead;
 	pthread_mutex_t	dead;
 	pthread_mutex_t	print;
 	pthread_mutex_t	*fork;
@@ -45,7 +47,7 @@ typedef struct s_philo
 {
 	int             i_phil;
 	int				eat_count;
-	int				last_eat;
+	long			last_eat;
 	int				l_fork;
 	int				r_fork;
 	t_data          *data;
@@ -56,7 +58,7 @@ typedef struct s_philo
 int     		main(int ac, char **av);
 pthread_t		*ft_create_philo(t_data *data);
 t_philo			ft_philo_var_init(int i, t_data *data);
-long long int   ft_time(void);
+long			ft_time(void);
 long			actual_time(long start_time);
 void			safe_print(t_philo *phil, char *str);
 t_data			*ft_struct_init(int ac, char **av);
@@ -68,6 +70,6 @@ void			ft_lock_fork(t_philo *phil);
 void			ft_unlock_fork(t_philo *phil);
 int				philo_sleep(t_philo *phil);
 int				philo_eat(t_philo *phil);
-
+int				is_dead(t_philo *phil);
 
 #endif

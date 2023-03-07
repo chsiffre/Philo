@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chsiffre <chsiffre@student.42.fr>          +#+  +:+       +#+        */
+/*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 10:35:11 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/06 16:50:17 by chsiffre         ###   ########.fr       */
+/*   Updated: 2023/03/07 12:03:49 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,20 @@ void *ft_routine(void *param)
 {
     t_philo *phil;
 
-    //printf("pre pointer = %p\n", param);
     phil = (t_philo *) param;
+    if (phil->i_phil % 2)
+        usleep(15000);
     while (phil->eat_count != phil->data->option_eat )
     {
-        if (philo_eat(phil) == 1)
+        if (philo_eat(phil) == 0)
         {
             if (philo_sleep(phil) == 1)
                 return (phil);
         }
+        else
+            return (0);
+        if (is_dead(phil) == 1)
+            return (0);
     }
     return (phil);
 }
@@ -32,11 +37,11 @@ void *ft_routine(void *param)
 void    safe_print(t_philo *phil, char *str)
 {
     pthread_mutex_lock(&phil->data->dead);
-    //if (is_alive())
-    //{
-        //pthread_mutex_unlock(&phil->data->dead);
-        //return (1);
-    //}
+    if (phil->data->philo_dead == 1)
+    {
+        pthread_mutex_unlock(&phil->data->dead);
+        return ;
+    }
     pthread_mutex_unlock(&phil->data->dead);
     pthread_mutex_lock(&phil->data->print);
     printf("%ld %d %s\n", actual_time(phil->data->start_time), phil->i_phil, str);
@@ -45,18 +50,19 @@ void    safe_print(t_philo *phil, char *str)
 
 int philo_eat(t_philo *phil)
 {
+    if (is_dead(phil) == 1)
+        return (1);
     ft_lock_fork(phil);
     safe_print(phil, FORK);
     safe_print(phil, FORK);
-    pthread_mutex_lock(&phil->data->dead);
-    // if (is_alive())
-    // {
-    //     pthread_mutex_unlock(&phil->data->dead);
-    //     return (1);
-    // }
-    pthread_mutex_unlock(&phil->data->dead);
+    if (actual_time(phil->data->start_time) - phil->last_eat > phil->data->time_die)
+    {
+        ft_unlock_fork(phil);
+        return (1);
+    }
     safe_print(phil, EAT);
-    usleep(phil->data->time_eat);
+    phil->last_eat = actual_time(phil->data->start_time);
+    usleep(phil->data->time_eat * 1000);
     phil->eat_count++;
     ft_unlock_fork(phil);
     return (0);
@@ -64,8 +70,28 @@ int philo_eat(t_philo *phil)
 
 int philo_sleep(t_philo *phil)
 {
+    if (is_dead(phil) == 1)
+        return (1);
     safe_print(phil, SLEEP);
-    usleep(phil->data->time_sleep);
+    usleep(phil->data->time_sleep * 1000);
+    if (is_dead(phil) == 1)
+        return (1);
     safe_print(phil, THINK);
+    return (0);
+}
+
+int    is_dead(t_philo *phil)
+{
+    pthread_mutex_lock(&phil->data->dead);
+    if (actual_time(phil->data->start_time) - phil->last_eat > phil->data->time_die)
+    {
+        phil->data->philo_dead = 1;
+        pthread_mutex_lock(&phil->data->print);
+        printf("%ld %d %s\n", actual_time(phil->data->start_time), phil->i_phil, DEAD);
+        pthread_mutex_unlock(&phil->data->print);
+    }
+    pthread_mutex_unlock(&phil->data->dead);
+    if (phil->data->philo_dead == 1)
+        return (1);
     return (0);
 }
