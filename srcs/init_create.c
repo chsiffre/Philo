@@ -6,28 +6,23 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 14:10:22 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/07 11:17:16 by charles          ###   ########.fr       */
+/*   Updated: 2023/03/08 13:25:15 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-pthread_t    *ft_create_philo(t_data *data)
+pthread_t    *ft_create_philo(t_data *data, t_philo *phil)
 {
     pthread_t   *philo;
-    t_philo     *phil;
     int i;
     
     philo = malloc(sizeof(pthread_t) * data->n_philo);
     if (!philo)
         return (NULL);
-    phil = malloc(sizeof(t_philo) * data->n_philo);
-    if (!philo)
-        return (NULL);
-    //phil->data = malloc(sizeof(t_data));
-    //if (!phil->data)
-        //return (NULL);
     data->fork = ft_create_fork(data->n_philo);
+    if (!data->fork)
+        return (NULL);
     i = -1;
     while (++i < data->n_philo)
     {

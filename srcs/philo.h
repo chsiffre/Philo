@@ -6,7 +6,7 @@
 /*   By: charles <charles@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 11:59:28 by chsiffre          #+#    #+#             */
-/*   Updated: 2023/03/07 11:51:41 by charles          ###   ########.fr       */
+/*   Updated: 2023/03/08 13:41:28 by charles          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,8 @@ typedef struct s_philo
 }   t_philo;
 
 int     		main(int ac, char **av);
-pthread_t		*ft_create_philo(t_data *data);
+pthread_t		*ft_create_philo(t_data *data, t_philo *phil);
 t_philo			ft_philo_var_init(int i, t_data *data);
-long			ft_time(void);
 long			actual_time(long start_time);
 void			safe_print(t_philo *phil, char *str);
 t_data			*ft_struct_init(int ac, char **av);
@@ -71,5 +70,8 @@ void			ft_unlock_fork(t_philo *phil);
 int				philo_sleep(t_philo *phil);
 int				philo_eat(t_philo *phil);
 int				is_dead(t_philo *phil);
+void			shot_time(t_philo *phil, long time_wait);
+void			ft_free(pthread_t *philo, t_data *data, t_philo *phil);
+void			ft_mutex_destroy(t_data *data);
 
 #endif

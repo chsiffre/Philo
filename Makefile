@@ -7,7 +7,8 @@ PHILO =	${DIR_PHILO}ft_atoi.c \
 			${DIR_PHILO}init_create.c \
 			${DIR_PHILO}fork.c \
 			${DIR_PHILO}thread_process.c \
-			${DIR_PHILO}philo_utils.c
+			${DIR_PHILO}philo_utils.c \
+			${DIR_PHILO}parsing.c
 
 	
 LIST_OBJS = ${PHILO:.c=.o}
